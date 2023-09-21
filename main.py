@@ -11,6 +11,15 @@ from linebot.models import (
 )
 import os
 
+#UDP通信用
+import socket
+
+HOST = '127.0.0.1'
+PORT = 50007
+client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+
+
 # 軽量なウェブアプリケーションフレームワーク:Flask
 app = Flask(__name__)
 
@@ -46,12 +55,18 @@ def handle_message(event):
 	line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=event.message.text)
+    )
+     
+@handler.add(MessageEvent, message=TextMessage)
+def send_udp(event):
+    client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    client.sendto(event.message.text.encode('utf-8'),(HOST,PORT))
 
-        #ここにユーザーからメッセージを受けた時の処理を記述する
+     
+         
 
 
-
-     )
+     
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT"))
