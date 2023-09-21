@@ -59,7 +59,7 @@ def handle_message(event):
      
 @handler.add(MessageEvent, message=TextMessage)
 def send_udp(event):
-    client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    global client  # グローバル変数を参照
     client.sendto(event.message.text.encode('utf-8'),(HOST,PORT))
 
      
