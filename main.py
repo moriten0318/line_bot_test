@@ -11,12 +11,7 @@ from linebot.models import (
 )
 import os
 
-#UDP通信用
-import socket
 
-HOST = '127.0.0.1'
-PORT = 50007
-client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 
 
@@ -56,18 +51,8 @@ def handle_message(event):
         event.reply_token,
         TextSendMessage(text=event.message.text)
     )
-     
-@handler.add(MessageEvent, message=TextMessage)
-def send_udp(event):
-    global client  # グローバル変数を参照
-    client.sendto(event.message.text.encode('utf-8'),(HOST,PORT))
 
      
-         
-
-
-     
-
 if __name__ == "__main__":
     port = int(os.getenv("PORT"))
     app.run(host="0.0.0.0", port=port)
