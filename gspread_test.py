@@ -25,6 +25,7 @@ lastnum = 0
 null = ""
 current_list = []
 
+#スプレッドシートを取得するための関数
 def get_sheet():        
     spreadsheet = gc.open_by_url(spreadsheet_url).sheet1
     import_value = spreadsheet.col_values(2)#B行の要素を取得
@@ -33,17 +34,24 @@ def get_sheet():
     #spreadsheet.acell('B'+cell_number).value
 
 
-def main():
-    while True:
-        new_list = get_sheet()    
-        if new_list==current_list:
-            print("更新はありません")
-            time.sleep(5.0)
-            continue
-        else:
-            #スプレッドシートに更新があったときの処理
-            for i in range(lastnum,len(new_list)):
-                print(new_list[i])
-            current_list = new_list
-            lastnum = len(current_list)
-            time.sleep(5.0)
+#UDP通信周りの関数
+def UDP(content):
+    client.sendto(content.encode('utf-8'),(HOST,PORT))
+
+
+
+while True:
+    new_list = get_sheet()    
+    if new_list==current_list:
+        print("更新はありません")
+        time.sleep(5.0)
+        continue
+    else:
+    #スプレッドシートに更新があったときの処理
+        for i in range(lastnum,len(new_list)):
+            print(new_list[i])
+            UDP(new_list[i])
+        current_list = new_list
+        lastnum = len(current_list)
+        time.sleep(5.0)
+
